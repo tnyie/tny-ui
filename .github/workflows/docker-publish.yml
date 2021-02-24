@@ -35,7 +35,7 @@ jobs:
         with:
           name: "firebase.json"
           json: "${{secrets.FIREBASE_JSON}}"
-          dir: "src/
+          dir: "src/"
 
       - name: Build image
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
