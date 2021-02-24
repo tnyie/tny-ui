@@ -31,7 +31,11 @@ jobs:
       
       # load json string from secrets to file
       - name: Add secrets
-        run: echo "${{secrets.FIREBASE_JSON}}" >> src/firebase.json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "firebase.json"
+          json: "${{secrets.FIREBASE_JSON}}"
+          dir: "src/
 
       - name: Build image
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
