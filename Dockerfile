@@ -17,5 +17,5 @@ RUN npm run build
 FROM nginx:1.18.0 AS prod
 
 RUN mkdir /app
-COPY --from=prod_builder /app/dist /app
+COPY --from=prod_builder /app/dist /app/ui
 COPY nginx.conf /etc/nginx/nginx.conf
