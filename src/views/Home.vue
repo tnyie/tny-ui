@@ -45,12 +45,55 @@
     <h1 v-show="!loggedIn" dark class="mt-12">
       Log in to get extra features, such as custom URLs
     </h1>
+    
+    <v-dialog
+      v-model="dialog"
+      width="500"
+      dark
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="red lighten-2"
+          dark
+          v-bind="attrs"
+          v-on="on"
+        >
+          Click Me
+        </v-btn>
+      </template>
+
+      <v-card>
+        <v-card-title class="headline lighten-2">
+          Your shortened URL
+        </v-card-title>
+
+        <v-card-text>
+          <v-progress-circular
+            class="margin-left: 1em;"
+            v-show="loadingResponse"
+            indeterminate
+          ></v-progress-circular>
+        </v-card-text>
+        
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="dialog = false"
+          >
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-// import PopupMenu from "@/components/PopupMenu.vue";
 
 const URLValidator = new RegExp(
   "^" +
@@ -129,15 +172,23 @@ export default Vue.extend({
   },
   methods: {
     submitUrl () {
-      fetch("/api/link", {
+      this.loadingResponse = true
+      this.dialog = true
+      fetch("https://tny.ie/api/link", {
         method: "POST",
+        mode: "no-cors",
         body: JSON.stringify({
           "url": this.url,
           "slug": this.slug
         })
       })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => {
+          console.log(data)
+          this.responseSlug = data.slug
+          this.responseURL = data.url
+          this.loadingResponse = false
+        })
     },
     genSlug () {
       const chars =
@@ -150,9 +201,13 @@ export default Vue.extend({
   },
   data() {
     return {
+      dialog: false,
       url: "",
       slug: "",
-      response: true
+      response: true,
+      loadingResponse: false,
+      responseURL: "",
+      responseSlug: ""
     };
   }
 });
