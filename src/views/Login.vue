@@ -92,18 +92,20 @@ export default Vue.extend({
   },
   methods: {
     submit () {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(
-          this.form.email, this.form.password
-        ).then(data => {
-          this.$router.replace({name: "Home"})
-          this.$emit("login");
-        })
-        .catch(err => {
-          this.error = err.message;
-        })
-    }
+      fetch("https://tny.ie/api/tokens", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(this.form)
+      }).then(data => {
+        console.log(data)
+        return data.json()
+      })
+      .then(response => {
+        localStorage.setItem("token", response.token)
+        console.log(response.token)
+      })
   },
-});
+}})
 </script>

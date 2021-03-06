@@ -8,7 +8,6 @@
         width: $vuetify.breakpoint.smAndDown ? '100%' : '80%',
         margin: 'auto'
       }"
-      @submit="submitUrl()"
     >
       <v-text-field
         label="Long URL"
@@ -51,17 +50,6 @@
       width="500"
       dark
     >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="red lighten-2"
-          dark
-          v-bind="attrs"
-          v-on="on"
-        >
-          Click Me
-        </v-btn>
-      </template>
-
       <v-card>
         <v-card-title class="headline lighten-2">
           Your shortened URL
@@ -174,9 +162,13 @@ export default Vue.extend({
     submitUrl () {
       this.loadingResponse = true
       this.dialog = true
-      fetch("https://tny.ie/api/link", {
+      fetch("https://tny,ie/api/links", {
         method: "POST",
-        mode: "no-cors",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer "+localStorage.getItem("token")
+        },
         body: JSON.stringify({
           "url": this.url,
           "slug": this.slug

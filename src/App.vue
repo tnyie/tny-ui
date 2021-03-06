@@ -17,21 +17,49 @@
 
 <script>
 import Navbar from "@/components/Navbar";
-import firebase from "firebase"
 
 export default {
   name: "App",
   components: { Navbar },
-  methods: {
-    signOut () {
-      this.loggedIn = false;
-    }
-  },
   data() {
     return {
-      loggedIn: false,
-      icon:"mdi-account",
-    };
-  }
+      loggedIn: this.checkLogin,
+      icon: "mdi-account",
+      token: ""
+    }
+  },
+  mounted() {
+    if (localStorage.token) {
+      this.token = localStorage.token;
+    }
+  },
+  watch: {
+    token(newToken) {
+      localStorage.token = newToken;
+    }
+  },
+  methods: {
+    checkLogin () {
+      if (this.token == "") {
+        return false
+      }
+      fetch("https://tny.ie/api/token", {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer "+ this.token
+        }
+      }).then(data => {
+        return data.json()
+      }).then(data => {
+        if (data.user_id && typeof(data.user_id) == String) {
+          return true
+        }     
+      })
+    },
+    signOut () {
+      localStorage.removeItem("token");
+    }
+  },
 };
+
 </script>
