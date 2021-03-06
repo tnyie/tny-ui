@@ -39,8 +39,9 @@
           margin: 'auto'
         }"
       ></v-text-field>
-      <v-btn  class="mt-4 mr-4
-      " style="margin: auto;">
+      <v-btn  class="mt-4 mr-4"
+        to="/signup"
+        style="margin: auto;">
         Sign Up
       </v-btn>
       <v-btn color="primary" class="mt-4" style="margin: auto;"

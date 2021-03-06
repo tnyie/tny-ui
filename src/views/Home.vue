@@ -37,7 +37,7 @@
           margin: 'auto'
         }"
       ></v-text-field>
-      <v-btn @click="submitUrl" color="primary" class="mt-4" style="margin: auto;"
+      <v-btn @click="clickBtn" color="primary" class="mt-4" style="margin: auto;"
         >Create Short URL</v-btn
       >
     </v-form>
@@ -51,18 +51,19 @@
       dark
     >
       <v-card>
-        <v-card-title class="headline lighten-2">
-          Your shortened URL
+        <v-card-title class="headline warning lighten-2">
+          Warning
         </v-card-title>
 
-        <v-card-text>
-          <v-progress-circular
-            class="margin-left: 1em;"
-            v-show="loadingResponse"
-            indeterminate
-          ></v-progress-circular>
+        <v-card-text class="my-3">
+          Notice: This project is a work-in-progress, and as such I offer no
+          guaruntees of reliability until this project has been stable for a while.
         </v-card-text>
         
+        <v-card-text>
+          Continue at your own risk
+        </v-card-text>
+
         <v-divider></v-divider>
 
         <v-card-actions>
@@ -70,9 +71,9 @@
           <v-btn
             color="primary"
             text
-            @click="dialog = false"
+            @click="submitUrl"
           >
-            Close
+            Continue
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -159,9 +160,11 @@ export default Vue.extend({
     }
   },
   methods: {
+    clickBtn () {
+      this.dialog = true
+    },
     submitUrl () {
       this.loadingResponse = true
-      this.dialog = true
       fetch("https://tny.ie/api/links", {
         method: "POST",
         mode: "cors",

@@ -55,9 +55,10 @@
         }"
       ></v-text-field>
       <v-btn class="mt-4 mr-4" style="margin: auto;"
+        to="/login"
       >Sign in</v-btn>
       <v-btn color="primary" class="mt-4" style="margin: auto;"
-        @click="submit"
+        @click="clickBtn"
       >Create your account</v-btn>
     </v-form>
     <p
@@ -65,12 +66,48 @@
 
       v-show="error"
     >{{error}}</p>
+
+
+    
+    <v-dialog
+      v-model="dialog"
+      width="500"
+      dark
+    >
+      <v-card>
+        <v-card-title class="headline warning lighten-2">
+          Warning
+        </v-card-title>
+
+        <v-card-text class="my-3">
+          Notice: This project is a work-in-progress, and as such I offer no
+          guaruntees of reliability until this project has been stable for a while.
+        </v-card-text>
+        
+        <v-card-text>
+          Continue at your own risk
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="submit"
+          >
+            Continue
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import firebase from 'firebase'
 
 const emailValidator = new RegExp("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
 
@@ -93,6 +130,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      dialog: false,
       form: {
         username: "",
         email: "",
@@ -103,6 +141,9 @@ export default Vue.extend({
     };
   },
   methods: {
+    clickBtn () {
+      this.dialog = true
+    },
     submit () {
       fetch("https://tny.ie/api/users", {
         method: "POST",

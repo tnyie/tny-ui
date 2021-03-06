@@ -17,14 +17,18 @@
                v-on="on"
                v-bind="attrs"
                >
-                <v-icon dark> mdi-delete </v-icon>
+                <v-icon dark class="ma-4"> mdi-delete </v-icon>
               </v-btn>
             </template>
 
              <v-card dark>
-              <v-card-title style="text-align: center;">
+              <v-card-title class="error" style="text-align: center;">
                 <span style="text-align: center;" class="headline">Delete {{ selected[0].slug }} link</span>
               </v-card-title>
+
+              <v-card-text class="my-4">
+                Are you sure you want to delete {{ selected[0].slug }}?
+              </v-card-text>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
