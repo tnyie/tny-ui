@@ -8,9 +8,33 @@
     <template class="mt-16">
       <v-card dark style="font-size: 2em" v-show="selected.length > 0">
         <v-card-title class="d-flex align-center">
-          <v-btn :disabled="selected[0].slug == ''" icon class="mr-4">
-            <v-icon dark> mdi-delete </v-icon>
-          </v-btn>
+          <v-dialog v-model="deleted.dialog" width="500">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                @click="checkSelected"
+               :disabled="selected[0].slug == ''"
+               icon class="mr-4"
+               v-on="on"
+               v-bind="attrs"
+               >
+                <v-icon dark> mdi-delete </v-icon>
+              </v-btn>
+            </template>
+
+             <v-card dark>
+              <v-card-title style="text-align: center;">
+                <span style="text-align: center;" class="headline">Delete {{ selected[0].slug }} link</span>
+              </v-card-title>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="deleted.dialog = false">
+                  Cancel
+                </v-btn>
+                <v-btn class="error" text @click="deleteLink">Delete</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
 
           <v-dialog v-model="edit.dialog" width="500">
             <template v-slot:activator="{ on, attrs }">
@@ -28,7 +52,7 @@
 
             <v-card dark>
               <v-card-title>
-                <span class="headline">Edit {{selected[0].slug}} link</span>
+                <span class="headline">Edit {{ selected[0].slug }} link</span>
               </v-card-title>
               <v-card-text>
                 <v-text-field
@@ -72,9 +96,8 @@
           :no-data-text="'You have no active links'"
         >
         </v-data-table>
-      </v-card>
-    </template></v-container
-  >
+      </v-card> </template
+  ></v-container>
 </template>
 
 <script lang="ts">
@@ -123,7 +146,6 @@ const URLValidator = new RegExp(
   "i"
 );
 
-
 const XSSValiator = new RegExp("^javascript:.*$");
 
 const getUID = () => {
@@ -145,6 +167,9 @@ export default Vue.extend({
       edit: {
         index: 0,
         item: {},
+        dialog: false,
+      },
+      deleted: {
         dialog: false,
       },
       selected: [{ id: "", slug: "", url: "" }],
@@ -171,9 +196,9 @@ export default Vue.extend({
         },
         (v: string) => {
           return URLValidator.test(v) || "Invalid URL";
-        }
+        },
       ];
-    }
+    },
   },
   created() {
     const uid = getUID();
@@ -212,19 +237,37 @@ export default Vue.extend({
       fetch(`https://tny.ie/api/links/${link.id}/url`, {
         method: "PUT",
         headers: {
-          "Authorization": "Bearer "+localStorage.getItem("token")
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
         mode: "cors",
         body: JSON.stringify({
           url: link.url,
+        }),
+      })
+        .then((res) => {
+          return res.json();
         })
-      }).then(res => {
-        return res.json()
+        .then((res) => {
+          console.log(res);
+        });
+      this.edit.dialog = false;
+    },
+    deleteLink() {
+      const link = this.selected[0];
+      fetch(`https://tny.ie/api/links/${link.id}`, {
+        method: "DELETE",
+        mode: "cors",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
+        }
       }).then(res => {
         console.log(res)
+        this.deleted.dialog = false
+      }).catch((error) => {
+        // TODO
       })
-      this.edit.dialog = false
-    },
+      
+    }
   },
 });
 </script>
