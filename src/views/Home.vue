@@ -69,6 +69,12 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
+            text
+            @click="dialog = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
             color="primary"
             text
             @click="submitUrl"
