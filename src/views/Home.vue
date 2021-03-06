@@ -162,7 +162,7 @@ export default Vue.extend({
     submitUrl () {
       this.loadingResponse = true
       this.dialog = true
-      fetch("https://tny,ie/api/links", {
+      fetch("https://tny.ie/api/links", {
         method: "POST",
         mode: "cors",
         headers: {

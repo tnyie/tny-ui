@@ -21,9 +21,14 @@ import Navbar from "@/components/Navbar";
 export default {
   name: "App",
   components: { Navbar },
+  created () {
+    console.log(this.loggedIn)
+    console.log("bruh")
+    this.checkLogin()
+  },
   data() {
     return {
-      loggedIn: this.checkLogin,
+      loggedIn: false,
       icon: "mdi-account",
       token: ""
     }
@@ -40,24 +45,31 @@ export default {
   },
   methods: {
     checkLogin () {
-      if (this.token == "") {
-        return false
+      if (localStorage.getItem("token") == null) {
+        console.log("no token")
+        this.loggedIn = false;
+        return
       }
-      fetch("https://tny.ie/api/token", {
+
+      let response;
+
+      fetch("https://tny.ie/api/tokens", {
         method: "GET",
         headers: {
-          "Authorization": "Bearer "+ this.token
+          "Authorization": "Bearer "+ localStorage.getItem("token")
         }
       }).then(data => {
         return data.json()
       }).then(data => {
-        if (data.user_id && typeof(data.user_id) == String) {
-          return true
-        }     
+        this.loggedIn = true;
+      }).catch(error => {
+        this.loggedIn = false;
       })
+      console.log(response)
+      this.loggedIn = response
     },
     signOut () {
-      localStorage.removeItem("token");
+      localStorage.clear();
     }
   },
 };

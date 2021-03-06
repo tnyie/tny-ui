@@ -104,24 +104,18 @@ export default Vue.extend({
   },
   methods: {
     submit () {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.form.email, this.form.password)
-        .then(data => {
-          if (data.user == null) return;
-            data.user
-              .updateProfile({
-                displayName: this.form.username
-              }).then(()=> {
-                data.user?.sendEmailVerification()
-              })
-              .then(() => {
-                console.log(data)
-              })
+      fetch("https://tny.ie/api/users", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: this.form.username,
+          email: this.form.email,
+          password: this.form.password
         })
-        .catch(err => {
-          this.error = err.message;
-        })
+      })
     }
   },
 });

@@ -113,20 +113,17 @@
 
 <script lang="ts">
 import Vue from "vue";
-import App from "@/App.vue"
-import firebase from 'firebase';
 
 export default Vue.extend({
   name: "Navbar",
   props: ["icon", "loggedIn"],
   methods: {
     signOut() {
-      console.log("user prelogout: ", firebase.auth().currentUser)
-      firebase.auth().signOut()
-      console.log("user: ", firebase.auth().currentUser)
+      
       this.$emit("logout")
     },
     logConsole() {
+      localStorage.clear();
       console.log(this.loggedIn);
     },
   },
