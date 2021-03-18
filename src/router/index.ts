@@ -2,6 +2,10 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 
 import Home from "../views/Home.vue";
+import Links from "../views/Link.vue";
+import Login from "../views/Login.vue"
+import SignUp from "../views/SignUp.vue"
+import Account from "../views/Account.vue"
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
@@ -9,6 +13,11 @@ const routes: Array<RouteConfig> = [
     path: "/",
     name: "Home",
     component: Home
+  },
+  {
+    path: "/account",
+    name: "Account",
+    component: Account
   },
   {
     path: "/links",
@@ -27,17 +36,17 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/login",
-    name: "Loging",
+    name: "Logging",
     component: () =>
       import("../views/Login.vue")
-  }
+  },
 ];
 
 console.log(process.env.API_KEY)
 
 const router = new VueRouter({
   mode: "history",
-  base: "/ui",
+  base: "/",
   routes
 });
 

@@ -7,23 +7,28 @@
     <h1 class="mt-16 mb-16">Links</h1>
     <template class="mt-16">
       <v-card dark style="font-size: 2em" v-show="selected.length > 0">
-        <v-card-title class="d-flex align-center">
+        <v-card-title class="d-flex align-center justify-center">
+          <v-btn class="ma-2" icon @click="fetchlinks">
+            <v-icon> mdi-refresh </v-icon>
+          </v-btn>
           <v-dialog v-model="deleted.dialog" width="500">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 @click="checkSelected"
-               :disabled="selected[0].slug == ''"
-               icon class="mr-4"
-               v-on="on"
-               v-bind="attrs"
-               >
+                :disabled="selected[0].slug == ''"
+                icon
+                v-on="on"
+                v-bind="attrs"
+              >
                 <v-icon dark class="ma-4"> mdi-delete </v-icon>
               </v-btn>
             </template>
 
-             <v-card dark>
-              <v-card-title class="error" style="text-align: center;">
-                <span style="text-align: center;" class="headline">Delete {{ selected[0].slug }} link</span>
+            <v-card dark>
+              <v-card-title class="error" style="text-align: center">
+                <span style="text-align: center" class="headline"
+                  >Delete {{ selected[0].slug }} link</span
+                >
               </v-card-title>
 
               <v-card-text class="my-4">
@@ -32,14 +37,17 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="deleted.dialog = false">
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="deleted.dialog = false"
+                >
                   Cancel
                 </v-btn>
                 <v-btn class="error" text @click="deleteLink">Delete</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
-
           <v-dialog v-model="edit.dialog" width="500">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -50,10 +58,9 @@
                 v-on="on"
                 v-bind="attrs"
               >
-                <v-icon dark> mdi-pencil </v-icon>
+                <v-icon> mdi-pencil </v-icon>
               </v-btn>
             </template>
-
             <v-card dark>
               <v-card-title>
                 <span class="headline">Edit {{ selected[0].slug }} link</span>
@@ -65,7 +72,6 @@
                   label="URL"
                 ></v-text-field>
               </v-card-text>
-
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="edit.dialog = false">
@@ -81,9 +87,10 @@
             v-model="search"
             append-icon="mdi-magnify"
             label="Filter"
+            dark
             clearable
-            single-line
             style="width: 10%"
+            single-line
             hide-details
           ></v-text-field>
         </v-card-title>
@@ -106,6 +113,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+
+import { links } from "@/api/api";
 
 const URLValidator = new RegExp(
   "^" +
@@ -179,13 +188,14 @@ export default Vue.extend({
       selected: [{ id: "", slug: "", url: "" }],
       search: "",
       uid: "",
-      links: [] as any[],
+      links: [] as links.Link[],
       table: {
         headers: [
           { text: "Slug", align: "start", filterable: true, value: "slug" },
           { text: "URL", filterable: true, value: "url" },
           { text: "Visits", value: "visits" },
           { text: "Created", filterable: true, value: "created_at" },
+          { text: "Updated", filteralble: true, value: "updated_at" },
           { text: "Valid until", filterable: true, value: "lease" },
         ],
       },
@@ -204,31 +214,32 @@ export default Vue.extend({
       ];
     },
   },
-  created() {
-    const uid = getUID();
-    fetch("https://tny.ie/api/links/user/" + uid, {
-      headers: {
-        "Content-Application": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      mode: "cors",
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        console.log(res);
-        let link;
-        for (link of res) {
-          link.created_at = new Date(link.created_at * 1000).toDateString();
-          link.lease = new Date(link.lease * 1000).toDateString();
-        }
-        this.links = res;
-        return;
-      });
-    this.links = [];
+  async created() {
+    this.fetchlinks();
   },
   methods: {
+    async fetchlinks() {
+      this.links = await links.FetchOwnLinks();
+      for (const link of this.links) {
+        console.log(this.links);
+        link.created_at = new Date(
+          Number(link.created_at) * 1000
+        ).toDateString();
+        const updated_at = new Date(Number(link.updated_at) * 1000);
+        if (
+          updated_at.setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0)
+        ) {
+          link.updated_at = new Date(
+            Number(link.updated_at) * 1000
+          ).toLocaleTimeString();
+        } else {
+          link.updated_at = new Date(
+            Number(link.updated_at) * 1000
+          ).toLocaleDateString();
+        }
+        link.lease = new Date(Number(link.lease) * 1000).toLocaleDateString();
+      }
+    },
     checkSelected() {
       console.log(this.selected);
     },
@@ -256,22 +267,13 @@ export default Vue.extend({
         });
       this.edit.dialog = false;
     },
-    deleteLink() {
+    async deleteLink() {
       const link = this.selected[0];
-      fetch(`https://tny.ie/api/links/${link.id}`, {
-        method: "DELETE",
-        mode: "cors",
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token")
-        }
-      }).then(res => {
-        console.log(res)
-        this.deleted.dialog = false
-      }).catch((error) => {
-        // TODO
-      })
-      
-    }
+      const err = await links.DeleteLink(link.id);
+      if (err) {
+        console.log("error deleting link\n", err);
+      }
+    },
   },
 });
 </script>

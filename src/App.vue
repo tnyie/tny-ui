@@ -53,7 +53,7 @@ export default {
 
       let response;
 
-      fetch("https://tny.ie/api/tokens", {
+      fetch("http://192.168.1.25:8888/api/tokens", {
         method: "GET",
         headers: {
           "Authorization": "Bearer "+ localStorage.getItem("token")
@@ -73,5 +73,4 @@ export default {
     }
   },
 };
-
 </script>

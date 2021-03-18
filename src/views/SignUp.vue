@@ -153,7 +153,7 @@ export default Vue.extend({
       this.dialog = true
     },
     submit () {
-      fetch("https://tny.ie/api/users", {
+      fetch("http://localhost:8888/api/users", {
         method: "POST",
         mode: "cors",
         headers: {

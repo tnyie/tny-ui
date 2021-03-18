@@ -1,17 +1,18 @@
 <template class="mt-16 white--text" style="margin: auto;">
-  <v-container dark class="white--text" style="text-align: center;">
+  <v-container dark class="white--text" style="text-align: center">
     <h1 class="mt-16">Shorten your URL</h1>
 
     <v-form
       class="mt-12"
       :style="{
         width: $vuetify.breakpoint.smAndDown ? '100%' : '80%',
-        margin: 'auto'
+        margin: 'auto',
       }"
     >
       <v-text-field
         label="Long URL"
         :rules="urlRule"
+        hint="Your long URL"
         v-model="url"
         tabindex="1"
         dark
@@ -34,22 +35,18 @@
         class="my-2"
         :style="{
           width: $vuetify.breakpoint.smAndDown ? '100%' : '60%',
-          margin: 'auto'
+          margin: 'auto',
         }"
       ></v-text-field>
-      <v-btn @click="clickBtn" color="primary" class="mt-4" style="margin: auto;"
+      <v-btn @click="clickBtn" color="primary" class="mt-4" style="margin: auto"
         >Create Short URL</v-btn
       >
     </v-form>
     <h1 v-show="!loggedIn" dark class="mt-12">
       Log in to get extra features, such as custom URLs
     </h1>
-    
-    <v-dialog
-      v-model="dialog"
-      width="500"
-      dark
-    >
+
+    <v-dialog v-model="dialog" width="500" dark>
       <v-card>
         <v-card-title class="headline warning lighten-2">
           Warning
@@ -57,30 +54,18 @@
 
         <v-card-text class="my-3">
           Notice: This project is a work-in-progress, and as such I offer no
-          guaruntees of reliability until this project has been stable for a while.
+          guaruntees of reliability until this project has been stable for a
+          while.
         </v-card-text>
-        
-        <v-card-text>
-          Continue at your own risk
-        </v-card-text>
+
+        <v-card-text> Continue at your own risk </v-card-text>
 
         <v-divider></v-divider>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            text
-            @click="dialog = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            color="primary"
-            text
-            @click="submitUrl"
-          >
-            Continue
-          </v-btn>
+          <v-btn text @click="dialog = false"> Cancel </v-btn>
+          <v-btn color="primary" text @click="submitUrl"> Continue </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -150,7 +135,7 @@ export default Vue.extend({
             v.length === 0 ||
             "Custom slugs must be at least 6 characters"
           );
-        }
+        },
       ];
     },
     urlRule() {
@@ -161,44 +146,44 @@ export default Vue.extend({
         },
         (v: string) => {
           return URLValidator.test(v) || "Invalid URL";
-        }
+        },
       ];
-    }
+    },
   },
   methods: {
-    clickBtn () {
-      this.dialog = true
+    clickBtn() {
+      this.dialog = true;
     },
-    submitUrl () {
-      this.loadingResponse = true
-      fetch("https://tny.ie/api/links", {
+    submitUrl() {
+      this.loadingResponse = true;
+      fetch("http://localhost:8888/api/links", {
         method: "POST",
         mode: "cors",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer "+localStorage.getItem("token")
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
         body: JSON.stringify({
-          "url": this.url,
-          "slug": this.slug
-        })
+          url: this.url,
+          slug: this.slug,
+        }),
       })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data)
-          this.responseSlug = data.slug
-          this.responseURL = data.url
-          this.loadingResponse = false
-        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          this.responseSlug = data.slug;
+          this.responseURL = data.url;
+          this.loadingResponse = false;
+        });
     },
-    genSlug () {
+    genSlug() {
       const chars =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
       this.slug = "";
       for (let i = 0; i < 6; i++) {
         this.slug = this.slug + chars[Math.floor(Math.random() * 62)];
       }
-    }
+    },
   },
   data() {
     return {
@@ -208,8 +193,8 @@ export default Vue.extend({
       response: true,
       loadingResponse: false,
       responseURL: "",
-      responseSlug: ""
+      responseSlug: "",
     };
-  }
+  },
 });
 </script>

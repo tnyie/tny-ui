@@ -10,7 +10,7 @@
             <v-flex style="height: 100%" class="d-flex align-center justify-center">
               <router-link to="/" tag="span" style="cursor: pointer">
                 <v-toolbar-title>
-                  Tny<span class="primary--text">URL</span>
+                  Tny<span class="primary--text">IE</span>
                 </v-toolbar-title>
               </router-link>
               <v-item-group v-show="$vuetify.breakpoint.mdAndUp" class="ml-6">
@@ -20,8 +20,9 @@
               </v-item-group>
             </v-flex>
           </v-col>
-          <v-col>
-            <v-btn v-show="loggedIn && $vuetify.breakpoint.mdAndUp" @click="signOut">Sign Out</v-btn>
+          <v-col class="d-flex align-center">
+            <v-btn to="/account" class="ma-2" v-show="loggedIn && $vuetify.breakpoint.mdAndUp">Account</v-btn>
+            <v-btn class="ma-2" v-show="loggedIn && $vuetify.breakpoint.mdAndUp" @click="signOut">Sign Out</v-btn>
             <v-btn to="/login" class="ma-2" v-show="!loggedIn && $vuetify.breakpoint.mdAndUp">Login</v-btn>
             <v-btn to="/signup" class="ma-2" v-show="!loggedIn && $vuetify.breakpoint.mdAndUp">Sign Up</v-btn>
           </v-col>
