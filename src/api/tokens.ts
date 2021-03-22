@@ -1,6 +1,5 @@
 import { APIReq } from "./api"
 
-
 export const GetUID = (): string => {
     const token = localStorage.getItem("token");
     if (token != null) {

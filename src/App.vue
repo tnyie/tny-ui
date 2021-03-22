@@ -4,7 +4,7 @@
     background-color: #121212;
     "
   >
-    <Navbar v-on:logout="loggedIn = false" v-bind:loggedIn="loggedIn" v-bind:icon="icon">
+    <Navbar v-on:logout="loggedIn = false" v-bind:loggedIn="loggedIn">
     </Navbar>
     <v-main>
         <router-view v-on:login="loggedIn = true" 
@@ -29,7 +29,6 @@ export default {
   data() {
     return {
       loggedIn: false,
-      icon: "mdi-account",
       token: ""
     }
   },
@@ -53,7 +52,7 @@ export default {
 
       let response;
 
-      fetch("http://192.168.1.25:8888/api/tokens", {
+      fetch("http://localhost:8888/api/tokens", {
         method: "GET",
         headers: {
           "Authorization": "Bearer "+ localStorage.getItem("token")

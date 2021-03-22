@@ -6,6 +6,7 @@ import Links from "../views/Link.vue";
 import Login from "../views/Login.vue"
 import SignUp from "../views/SignUp.vue"
 import Account from "../views/Account.vue"
+import Graph from "../views/Graph.vue"
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
@@ -40,6 +41,11 @@ const routes: Array<RouteConfig> = [
     component: () =>
       import("../views/Login.vue")
   },
+  {
+    path: "/graph",
+    name: "Graph",
+    component: Graph
+  }
 ];
 
 console.log(process.env.API_KEY)

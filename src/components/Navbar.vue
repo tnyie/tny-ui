@@ -1,13 +1,13 @@
 <template>
   <nav>
     <v-app-bar app flat dark fixed>
-      <v-container>
+      <v-container style="width: 80%">
         <v-row>
           <v-col>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"  v-show="$vuetify.breakpoint.mdAndDown"></v-app-bar-nav-icon>
           </v-col>
           <v-col>
-            <v-flex style="height: 100%" class="d-flex align-center justify-center">
+            <v-flex style="height: 100%; width: 100%" class="d-flex align-center justify-center">
               <router-link to="/" tag="span" style="cursor: pointer">
                 <v-toolbar-title>
                   Tny<span class="primary--text">IE</span>
@@ -117,7 +117,7 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "Navbar",
-  props: ["icon", "loggedIn"],
+  props: ["loggedIn"],
   methods: {
     signOut() {
       
@@ -134,6 +134,7 @@ export default Vue.extend({
       links: [
         { text: "Home", icon: "mdi-home", route: "/" },
         { text: "Links", icon: "mdi-link", route: "/links" },
+        { text: "Graph", icon: "mdi-graph", route: "/graph" }
       ],
     };
   },
