@@ -1,6 +1,7 @@
 export * as links from "./links"
 export * as tokens from "./tokens"
 export * as visits from "./visits"
+export * as users from "./users"
 
 export const API_DOMAIN = "http://localhost:8888/api"
 

@@ -11,41 +11,49 @@
         </tbody>
       </template>
     </v-simple-table>
-    <p class="mt-4"><a :href="'https://tny.ie/api/gdpr/'+userdata[0].value">Download GDPR data</a></p>
+    <p class="mt-4"><a :href="'https://tny.ie/api/gdpr/'+uid">Download GDPR data</a></p>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
+import {users, tokens} from "@/api/api"
+
 export default Vue.extend({
   name: "Account",
   data() {
     return {
       // placeholder data
-      userdata: [
-        {
-          name: "User ID",
-          value: "c7a013ef-125b-4362-9ad2-cb33c941367f"
-        },
-        {
-          name: "Username",
-          value: "thomas",
-        },
-        {
-          name: "Email",
-          value: "thomas007g@gmail.com",
-        },
-        {
-          name: "Created At",
-          value: new Date(1606027176686).toDateString()
-        },
-        {
-          name: "Updated At",
-          value: new Date(1616027176686).toDateString(),
-        },
-      ],
+      uid: " ",
+      userdata: [] as any[],
     };
   },
+  async mounted() {
+    this.uid = tokens.GetUID()
+    const user =  await users.GetUser(this.uid)
+    
+    this.userdata = []
+
+    Object.entries(user).forEach(([key, value]) => { 
+      this.setData(key, value)
+    })
+    // for (const key, let value of Object.entries(user)) {
+    //   if (typeof(value == Date)) {
+    //     value = value.toISOString()
+    //   }
+    //   this.userdata.push({name: key, value: value})
+    // }
+    // console.log(this.userdata)
+
+  },
+  methods: {
+    setData (key: string, value: any) {
+      if (key == "created_at" || key == "updated_at" ) {
+        value = value.toLocaleDateString()
+      }
+      this.userdata.push({name: key, value: value})
+    }
+  }
 });
 </script>
