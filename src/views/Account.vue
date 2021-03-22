@@ -38,14 +38,6 @@ export default Vue.extend({
     Object.entries(user).forEach(([key, value]) => { 
       this.setData(key, value)
     })
-    // for (const key, let value of Object.entries(user)) {
-    //   if (typeof(value == Date)) {
-    //     value = value.toISOString()
-    //   }
-    //   this.userdata.push({name: key, value: value})
-    // }
-    // console.log(this.userdata)
-
   },
   methods: {
     setData (key: string, value: any) {
