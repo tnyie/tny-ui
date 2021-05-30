@@ -45,10 +45,13 @@ const routes: Array<RouteConfig> = [
     path: "/graph",
     name: "Graph",
     component: Graph
+  },
+  {
+    path: "/redirect/:slug",
+    name: "Redirect", 
+    component: () => import("../views/Redirect.vue")
   }
 ];
-
-console.log(process.env.API_KEY)
 
 const router = new VueRouter({
   mode: "history",

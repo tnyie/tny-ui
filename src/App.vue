@@ -17,14 +17,14 @@
 
 <script>
 import Navbar from "@/components/Navbar";
+import {tokens} from "@/api/api"
 
 export default {
   name: "App",
   components: { Navbar },
   created () {
-    console.log(this.loggedIn)
-    console.log("bruh")
     this.checkLogin()
+    console.log("Logged in: ", this.loggedIn)
   },
   data() {
     return {
@@ -45,27 +45,11 @@ export default {
   methods: {
     checkLogin () {
       if (localStorage.getItem("token") == null) {
-        console.log("no token")
         this.loggedIn = false;
         return
       }
 
-      let response;
-
-      fetch("http://localhost:8888/api/tokens", {
-        method: "GET",
-        headers: {
-          "Authorization": "Bearer "+ localStorage.getItem("token")
-        }
-      }).then(data => {
-        return data.json()
-      }).then(data => {
-        this.loggedIn = true;
-      }).catch(error => {
-        this.loggedIn = false;
-      })
-      console.log(response)
-      this.loggedIn = response
+      this.loggedIn = tokens.CheckToken()
     },
     signOut () {
       localStorage.clear();

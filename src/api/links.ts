@@ -1,4 +1,4 @@
-import { APIReq, tokens } from "./api"
+import { APIReq, GenericResponse, tokens } from "./api"
 
 export interface Link {
     id: string
@@ -8,6 +8,12 @@ export interface Link {
     lease: number | string,
     created_at: number | string
     updated_at: number | string
+    unlock_time: number | string
+}
+
+export const CreateLink = async (link: Link): Promise<Link> => {
+    const request = await APIReq("/links", "POST", link, true)
+    return await request.body
 }
 
 export const FetchOwnLinks = async (): Promise<Link[]> => {
@@ -17,8 +23,26 @@ export const FetchOwnLinks = async (): Promise<Link[]> => {
     if (await request.err) {
         return []
     }
-
     return await request.body;
+}
+
+export const FetchAuthenticatedLinks = async (slug: string, password: string): Promise<GenericResponse> => {
+    const request = await APIReq(
+        "/links/authenticated/"+slug, "GET", {"password": password}, false
+    )
+
+    if (await request.err) {
+        return {data: ""}
+    }
+    return await request.body
+}
+
+export const UpdateLinkURL = async (linkID: string, url: string): Promise<boolean> => {
+    const request = await APIReq(
+        "/links/"+linkID+"/url", "PUT", {"url": url}, true
+    )
+    console.log(request)
+    return request.err
 }
 
 export const DeleteLink = async (linkID: string): Promise<boolean> => {

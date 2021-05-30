@@ -4,7 +4,6 @@ export const GetUID = (): string => {
     const token = localStorage.getItem("token");
     if (token != null) {
         const claims = JSON.parse(atob(token.split(".")[1]));
-        console.log("claims: ", claims);
         if (claims != null) {
           return claims.UserID;
         }
@@ -20,4 +19,9 @@ interface LoginDetails {
 export const Login = async (details: LoginDetails): Promise<string> => {
     const request = await APIReq("/tokens", "POST", details, false)
     return request.body.token
+}
+
+export const CheckToken = async (): Promise<boolean> => {
+    const request = await APIReq("/tokens", "GET", {}, true)
+    return request.err
 }

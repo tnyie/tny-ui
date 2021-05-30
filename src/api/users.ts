@@ -15,3 +15,8 @@ export const GetUser = async (id: string): Promise<User> => {
     request.body.updated_at = await new Date(request.body.updated_at*1000)
     return await request.body;
 }
+
+export const CreateUser = async (user: User): Promise<User> => {
+    const request = await APIReq("/users", "POST", user, false)
+    return await request.body
+}

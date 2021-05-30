@@ -13,17 +13,17 @@
         label="Long URL"
         :rules="urlRule"
         hint="Your long URL"
-        v-model="url"
+        v-model="form.url"
         tabindex="1"
         dark
         clearable
         class="my-2"
       ></v-text-field>
       <v-text-field
-        label="Short URL Path"
+        label="Short URL Slug"
         :rules="slugRule"
         hint="This will be the bit after the slash in tny.ie"
-        v-model="slug"
+        v-model="form.slug"
         tabindex="2"
         :disabled="!this.loggedIn"
         append-icon="mdi-dice-multiple"
@@ -38,9 +38,95 @@
           margin: 'auto',
         }"
       ></v-text-field>
-      <v-btn @click="clickBtn" color="primary" class="mt-4" style="margin: auto"
-        >Create Short URL</v-btn
+
+      <v-btn
+        style="display: block; margin: 1em auto;"
+        v-show="loggedIn"
+        @click="timedialog = true"
       >
+        Set Unlock Time
+        <v-icon style="margin: 0.1em">mdi-lock</v-icon>
+      </v-btn>
+      <v-dialog
+        :fullscreen="this.$vuetify.breakpoint.mdAndDown"
+        v-model="timedialog"
+        max-width="1000px"
+        dark
+      >
+        <v-card style="padding: 4em;overflow-x: hidden;">
+          <v-card-title>
+            <h2
+              class="mt-16"
+              style="margin: auto; margin-bottom: 1em; word-break: initial; hyphens: none"
+            >
+              Set a time and date for your Link to unlock
+            </h2>
+          </v-card-title>
+          <v-card-text class="d-flex flex-column align-center">
+            <v-container
+              :class="
+                this.$vuetify.breakpoint.mdAndUp
+                  ? 'd-flex align-center justify-space-between'
+                  : 'd-flex flex-column align-center'
+              "
+            >
+              <v-date-picker
+                color="primary"
+                dark
+                v-model="unlock_time.date"
+                :style="
+                  this.$vuetify.breakpoint.mdAndDown ? 'margin-bottom: 1em' : ''
+                "
+              ></v-date-picker>
+              <v-time-picker
+                :landscape="this.$vuetify.breakpoint.mdAndUp"
+                dark
+                format="24hr"
+                v-model="unlock_time.time"
+                color="primary"
+              ></v-time-picker>
+            </v-container>
+            <v-container
+              style="margin: auto;"
+              class="d-flex flex-row align-items-center justify-center"
+            >
+              <v-btn @click="resetTime()">
+                Cancel
+              </v-btn>
+              <v-btn class="mx-4" color="primary" @click="timedialog = false">
+                Set date/time
+              </v-btn>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+
+      <template>
+        <v-text-field
+          label="Optional Password"
+          v-model="form.password"
+          tabindex="2"
+          :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="show2 ? 'text' : 'password'"
+          @click:append="show2 = !show2"
+          dark
+          clearable
+          class="my-2"
+          counter
+          :style="{
+            width: $vuetify.breakpoint.mdAndDown ? '100%' : '60%',
+            margin: 'auto',
+          }"
+        ></v-text-field>
+      </template>
+      <v-btn
+        @click="clickBtn"
+        color="primary"
+        class="mt-4"
+        style="margin: auto"
+      >
+        Create Short URL
+      </v-btn>
     </v-form>
     <h1 v-show="!loggedIn" dark class="mt-12">
       Log in to get extra features, such as custom URLs
@@ -74,6 +160,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+
+import {links} from "../api/api"
 
 const URLValidator = new RegExp(
   "^" +
@@ -151,30 +239,25 @@ export default Vue.extend({
     },
   },
   methods: {
+    resetTime() {
+      this.unlock_time.date = "";
+      this.unlock_time.time = "";
+      this.timedialog = false;
+    },
     clickBtn() {
+
+      console.log(this.unlock_time.date)
+      console.log(this.unlock_time.time)
+
+      this.form.unlock_time = Date.parse(
+        this.unlock_time.date + " " + this.unlock_time.time
+      ) / 1000
       this.dialog = true;
+      console.log(this.form.unlock_time)
     },
     submitUrl() {
       this.loadingResponse = true;
-      fetch("http://localhost:8888/api/links", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-        body: JSON.stringify({
-          url: this.url,
-          slug: this.slug,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          this.responseSlug = data.slug;
-          this.responseURL = data.url;
-          this.loadingResponse = false;
-        });
+      links.CreateLink(this.form as links.Link)
     },
     genSlug() {
       const chars =
@@ -188,6 +271,24 @@ export default Vue.extend({
   data() {
     return {
       dialog: false,
+      show2: false,
+      form: {
+        id: "",
+        owner_id: "",
+        lease: "",
+        created_at: "",
+        updated_at: "",
+        url: "",
+        slug: "",
+        date: "",
+        unlock_time: 0,
+      },
+      unlock_time: {
+        date: "",
+        time: "",
+      },
+      passdialog: false,
+      timedialog: false,
       url: "",
       slug: "",
       response: true,

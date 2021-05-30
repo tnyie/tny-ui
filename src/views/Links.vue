@@ -107,7 +107,24 @@
           :no-data-text="'You have no active links'"
         >
         </v-data-table>
-      </v-card> </template
+      </v-card> 
+      <template>
+        <v-snackbar
+          v-model="snackbar"
+          timout="500"
+        >
+          <span v-text="(this.status) ? 'Successfully updated link':'Failed to update link'"></span>
+          <template v-slot:action="{ attrs }">
+            <v-btn
+              text
+              v-bind="attrs"
+              @click="snackbar = false"
+              :color="(status) ? 'green':'orange darken-2'"
+            >Close</v-btn>
+          </template>
+        </v-snackbar>
+      </template>  
+    </template
   ></v-container>
 </template>
 
@@ -165,7 +182,6 @@ const getUID = () => {
   const token = localStorage.getItem("token");
   if (token != null) {
     const claims = JSON.parse(atob(token.split(".")[1]));
-    console.log("claims: ", claims);
     if (claims != null) {
       return claims.UserID;
     }
@@ -177,6 +193,8 @@ export default Vue.extend({
   name: "Links",
   data() {
     return {
+      status: true,
+      snackbar: false,
       edit: {
         index: 0,
         item: {},
@@ -195,7 +213,8 @@ export default Vue.extend({
           { text: "URL", filterable: true, value: "url" },
           { text: "Visits", value: "visits" },
           { text: "Created", filterable: true, value: "created_at" },
-          { text: "Updated", filteralble: true, value: "updated_at" },
+          { text: "Updated", filterable: true, value: "updated_at" },
+          { text: "Unlock Time", filterable: true, value: "unlocktime" },
           { text: "Valid until", filterable: true, value: "lease" },
         ],
       },
@@ -214,14 +233,13 @@ export default Vue.extend({
       ];
     },
   },
-  async created() {
+  async mounted() {
     this.fetchlinks();
   },
   methods: {
     async fetchlinks() {
       this.links = await links.FetchOwnLinks();
       for (const link of this.links) {
-        console.log(this.links);
         link.created_at = new Date(
           Number(link.created_at) * 1000
         ).toDateString();
@@ -238,6 +256,10 @@ export default Vue.extend({
           ).toLocaleDateString();
         }
         link.lease = new Date(Number(link.lease) * 1000).toLocaleDateString();
+        link.unlock_time =
+          link.unlock_time == 0
+            ? ""
+            : new Date(Number(link.unlock_time) * 1000).toLocaleString();
       }
     },
     checkSelected() {
@@ -247,26 +269,15 @@ export default Vue.extend({
       this.edit.index = this.links.indexOf(item);
       this.edit.item = Object.assign({}, item);
     },
-    save() {
+    async save() {
       const link = this.selected[0];
-      fetch(`https://tny.ie/api/links/${link.id}/url`, {
-        method: "PUT",
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-        mode: "cors",
-        body: JSON.stringify({
-          url: link.url,
-        }),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((res) => {
-          console.log(res);
-        });
+
+      this.status = ! (await links.UpdateLinkURL(link.id, link.url));
+
+      this.snackbar = true
       this.edit.dialog = false;
     },
+
     async deleteLink() {
       const link = this.selected[0];
       const err = await links.DeleteLink(link.id);

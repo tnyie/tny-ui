@@ -1,24 +1,29 @@
 <template>
-  <apexchart
-    class="mt-16"
-    type="line"
-    :options="options"
-    :series="series"
-    height="100%"
-  ></apexchart>
+  <D3LineChart>
+
+  </D3LineChart>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { links, visits } from "@/api/api";
 
-import VueApexCharts from "vue-apexcharts";
-Vue.use(VueApexCharts);
+import {D3LineChart} from "vue-d3-charts"
 
-Vue.component("apexchart", VueApexCharts);
+// import VueApexCharts from "vue-apexcharts";
+// Vue.use(VueApexCharts);
+
+// Vue.component("apexchart", VueApexCharts);
 export default Vue.extend({
   name: "Chart",
+  components: {D3LineChart},
   data() {
     return {
+      chartConfig: {
+        key: "Link Traffic",
+      },
+      chart_data: [
+        
+      ],
       links: [] as links.Link[],
       link_visits: [] as Array<visits.VisitPerDay[]>,
       options: {

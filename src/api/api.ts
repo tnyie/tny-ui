@@ -3,13 +3,17 @@ export * as tokens from "./tokens"
 export * as visits from "./visits"
 export * as users from "./users"
 
-export const API_DOMAIN = "http://localhost:8888/api"
+export const API_DOMAIN = "https://tny.ie"
 
 interface APIResponse {
     status_code:    number,
     status_text:    string,
     body:           any,
     err:            boolean
+}
+
+export interface GenericResponse {
+    data: string
 }
 
 export const APIReq = async (path: string, method: string, body: any = undefined, authenticated = true) => {
@@ -22,7 +26,7 @@ export const APIReq = async (path: string, method: string, body: any = undefined
                 "Authorization": (authenticated) ? `Bearer ${localStorage.getItem("token")}` : "",
                 "Content-Type": (body != {}) ? "application/json" : "text/plain",
             },
-            body: (method === "GET") ? null:(!body) ? null:body
+            body: (method === "GET") ? null:(!body) ? null:JSON.stringify(body)
         })
     } else {
         request = await fetch(API_DOMAIN + path, {

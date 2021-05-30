@@ -1,21 +1,23 @@
 <template>
   <nav>
     <v-app-bar app flat dark fixed>
-      <v-container style="width: 80%">
-        <v-row>
+      <v-container style="width: 100%">
+        <v-row style="with: 100%">
           <v-col>
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer"  v-show="$vuetify.breakpoint.mdAndDown"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"  v-show="$vuetify.breakpoint.smAndDown"></v-app-bar-nav-icon>
           </v-col>
-          <v-col>
-            <v-flex style="height: 100%; width: 100%" class="d-flex align-center justify-center">
-              <router-link to="/" tag="span" style="cursor: pointer">
+          <v-col style="width=60%">
+            <v-flex style="height: 100%; width: 100%" class="d-flex align-center">
+              <router-link to="/" custom style="cursor: pointer; text-decoration: none;">
+                <span style="color: white">
                 <v-toolbar-title>
                   Tny<span class="primary--text">IE</span>
                 </v-toolbar-title>
+                </span>
               </router-link>
               <v-item-group v-show="$vuetify.breakpoint.mdAndUp" class="ml-6">
                 <v-item v-for="link in links" :key="link.text">
-                  <v-btn :to="link.route" text v-text="link.text"></v-btn>
+                  <v-btn :to="link.route" text v-text="link.text" style="font-size: 0.8em; padding: 0;"></v-btn>
                 </v-item>
               </v-item-group>
             </v-flex>
@@ -125,7 +127,6 @@ export default Vue.extend({
     },
     logConsole() {
       localStorage.clear();
-      console.log(this.loggedIn);
     },
   },
   data() {
