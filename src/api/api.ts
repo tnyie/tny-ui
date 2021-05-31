@@ -3,7 +3,7 @@ export * as tokens from "./tokens"
 export * as visits from "./visits"
 export * as users from "./users"
 
-export const API_DOMAIN = "https://tny.ie"
+export const API_DOMAIN = "https://tny.ie/api"
 
 interface APIResponse {
     status_code:    number,
