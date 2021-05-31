@@ -11,7 +11,7 @@ export interface Link {
     unlock_time: number | string
 }
 
-export const CreateLink = async (link: Link): Promise<Link> => {
+export const CreateLink = async (link: any): Promise<Link> => {
     const request = await APIReq("/links", "POST", link, true)
     return await request.body
 }

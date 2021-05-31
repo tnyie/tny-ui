@@ -258,7 +258,7 @@ export default Vue.extend({
     },
     submitUrl() {
       this.loadingResponse = true;
-      links.CreateLink(this.form as links.Link)
+      links.CreateLink(this.form)
     },
     genSlug() {
       const chars =
@@ -274,11 +274,6 @@ export default Vue.extend({
       dialog: false,
       show2: false,
       form: {
-        id: "",
-        owner_id: "",
-        lease: "",
-        created_at: "",
-        updated_at: "",
         url: "",
         slug: "",
         date: "",
