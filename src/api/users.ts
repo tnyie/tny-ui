@@ -16,7 +16,7 @@ export const GetUser = async (id: string): Promise<User> => {
     return await request.body;
 }
 
-export const CreateUser = async (user: User): Promise<User> => {
+export const CreateUser = async (user: any): Promise<User> => {
     const request = await APIReq("/users", "POST", user, false)
     return await request.body
 }

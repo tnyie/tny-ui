@@ -116,6 +116,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import {users} from "@/api/api"
 
 const emailValidator = new RegExp("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
 
@@ -153,18 +154,7 @@ export default Vue.extend({
       this.dialog = true
     },
     submit () {
-      fetch("http://localhost:8888/api/users", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          username: this.form.username,
-          email: this.form.email,
-          password: this.form.password
-        })
-      })
+      users.CreateUser(this.form)
     }
   },
 });
