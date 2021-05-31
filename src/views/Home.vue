@@ -15,6 +15,7 @@
         hint="Your long URL"
         v-model="form.url"
         tabindex="1"
+        type="url"
         dark
         clearable
         class="my-2"

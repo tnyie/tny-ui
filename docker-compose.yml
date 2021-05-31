@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+  tnyui:
+    container_name: tny_ui
+    build: .
+    ports:
+      - "80:8080"
