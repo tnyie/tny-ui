@@ -107,25 +107,29 @@
           :no-data-text="'You have no active links'"
         >
         </v-data-table>
-      </v-card> 
+      </v-card>
       <template>
-        <v-snackbar
-          v-model="snackbar"
-          timout="500"
-        >
-          <span v-text="(this.status) ? 'Successfully updated link':'Failed to update link'"></span>
+        <v-snackbar v-model="snackbar" timout="500">
+          <span
+            v-text="
+              this.status
+                ? 'Successfully updated link'
+                : 'Failed to update link'
+            "
+          ></span>
           <template v-slot:action="{ attrs }">
             <v-btn
               text
               v-bind="attrs"
               @click="snackbar = false"
-              :color="(status) ? 'green':'orange darken-2'"
-            >Close</v-btn>
+              :color="status ? 'green' : 'orange darken-2'"
+              >Close</v-btn
+            >
           </template>
         </v-snackbar>
-      </template>  
-    </template
-  ></v-container>
+      </template>
+    </template></v-container
+  >
 </template>
 
 <script lang="ts">
@@ -272,18 +276,19 @@ export default Vue.extend({
     async save() {
       const link = this.selected[0];
 
-      this.status = ! (await links.UpdateLinkURL(link.id, link.url));
+      this.status = !(await links.UpdateLinkURL(link.id, link.url));
 
-      this.snackbar = true
+      this.snackbar = true;
       this.edit.dialog = false;
+
+      this.fetchlinks();
     },
 
     async deleteLink() {
       const link = this.selected[0];
-      const err = await links.DeleteLink(link.id);
-      if (err) {
-        console.log("error deleting link\n", err);
-      }
+      links.DeleteLink(link.id);
+      this.deleted.dialog = false;
+      this.fetchlinks();
     },
   },
 });

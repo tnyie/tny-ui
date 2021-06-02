@@ -3,76 +3,96 @@
     <v-app-bar app flat dark fixed>
       <v-container style="width: 100%">
         <v-row style="with: 100%">
-          <v-col>
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer"  v-show="$vuetify.breakpoint.smAndDown"></v-app-bar-nav-icon>
+          <v-col style="max-width: 20%;">
+            <v-app-bar-nav-icon
+              @click.stop="drawer = !drawer"
+              v-show="$vuetify.breakpoint.smAndDown"
+            ></v-app-bar-nav-icon>
           </v-col>
-          <v-col style="width=60%">
-            <v-flex style="height: 100%; width: 100%" class="d-flex align-center">
-              <router-link to="/" custom style="cursor: pointer; text-decoration: none;">
+          <v-col style="width=75%">
+            <v-flex
+              style="height: 100%; width: 100%"
+              class="d-flex align-center"
+            >
+              <router-link
+                to="/"
+                custom
+                style="cursor: pointer; text-decoration: none;"
+              >
                 <span style="color: white">
-                <v-toolbar-title>
-                  Tny<span class="primary--text">IE</span>
-                </v-toolbar-title>
+                  <v-toolbar-title>
+                    Tny<span class="primary--text">IE</span>
+                  </v-toolbar-title>
                 </span>
               </router-link>
-              <v-item-group v-show="$vuetify.breakpoint.mdAndUp" class="ml-6">
+              <v-item-group v-show="$vuetify.breakpoint.mdAndUp" class="ml-4" style="width: 100%">
                 <v-item v-for="link in links" :key="link.text">
-                  <v-btn :to="link.route" text v-text="link.text" style="font-size: 0.8em; padding: 0;"></v-btn>
+                  <v-btn
+                    :to="link.route"
+                    text
+                    v-text="link.text"
+                    style="font-size: 0.8em; padding: 0;"
+                    class="mx-1"
+                  ></v-btn>
                 </v-item>
               </v-item-group>
             </v-flex>
           </v-col>
           <v-col class="d-flex align-center">
-            <v-btn to="/account" class="ma-2" v-show="loggedIn && $vuetify.breakpoint.mdAndUp">Account</v-btn>
-            <v-btn class="ma-2" v-show="loggedIn && $vuetify.breakpoint.mdAndUp" @click="signOut">Sign Out</v-btn>
-            <v-btn to="/login" class="ma-2" v-show="!loggedIn && $vuetify.breakpoint.mdAndUp">Login</v-btn>
-            <v-btn to="/signup" class="ma-2" v-show="!loggedIn && $vuetify.breakpoint.mdAndUp">Sign Up</v-btn>
+            <v-btn
+              to="/account"
+              class="ma-2"
+              v-show="loggedIn && $vuetify.breakpoint.mdAndUp"
+              >Account</v-btn
+            >
+            <v-btn
+              class="ma-2"
+              v-show="loggedIn && $vuetify.breakpoint.mdAndUp"
+              @click="signOut"
+              >Sign Out</v-btn
+            >
+            <v-btn
+              to="/login"
+              class="ma-2"
+              v-show="!loggedIn && $vuetify.breakpoint.mdAndUp"
+              >Login</v-btn
+            >
+            <v-btn
+              to="/signup"
+              class="ma-2"
+              v-show="!loggedIn && $vuetify.breakpoint.mdAndUp"
+              >Sign Up</v-btn
+            >
           </v-col>
         </v-row>
       </v-container>
     </v-app-bar>
-    <v-navigation-drawer
-      v-model="drawer"
-      width="60%"
-      absolute
-      dark
-      temporary
-    >
+    <v-navigation-drawer v-model="drawer" width="60%" absolute dark temporary>
       <v-list>
-        <v-list-item
-          v-show="!loggedIn"
-          to="/login"
-          link
-        >
+        <v-list-item v-show="!loggedIn" to="/login" link>
           <v-list-item-icon>
             <v-icon>
-            mdi-login
+              mdi-login
             </v-icon>
           </v-list-item-icon>
           <v-list-item-title>
             Login
           </v-list-item-title>
         </v-list-item>
-        <v-list-item
-          v-show="!loggedIn"
-          link
-        >
+        <v-list-item v-show="!loggedIn" link>
           <v-list-item-icon>
             <v-icon>
-            mdi-account-plus
+              mdi-account-plus
             </v-icon>
           </v-list-item-icon>
           <v-list-item-title>
             Sign Up
           </v-list-item-title>
         </v-list-item>
-        <v-list-item
-          v-show="loggedIn"
-          link
-        >
+        <v-list-item v-show="loggedIn" link>
           <v-list-item-icon>
             <v-icon>
-            mdi-logout
+              mdi-logout
             </v-icon>
           </v-list-item-icon>
           <v-list-item-title>
@@ -80,11 +100,7 @@
           </v-list-item-title>
         </v-list-item>
 
-        <v-list-item 
-          v-show="loggedIn"
-          link
-          to="/"
-        >
+        <v-list-item v-show="loggedIn" link to="/">
           <v-list-item-icon>
             <v-icon>
               mdi-home
@@ -95,11 +111,7 @@
           </v-list-item-title>
         </v-list-item>
 
-        <v-list-item
-          v-show="loggedIn"
-          link
-          to="/links"
-        >
+        <v-list-item v-show="loggedIn" link to="/links">
           <v-list-item-icon>
             <v-icon>
               mdi-link
@@ -122,8 +134,7 @@ export default Vue.extend({
   props: ["loggedIn"],
   methods: {
     signOut() {
-      
-      this.$emit("logout")
+      this.$emit("logout");
     },
     logConsole() {
       localStorage.clear();
@@ -135,7 +146,7 @@ export default Vue.extend({
       links: [
         { text: "Home", icon: "mdi-home", route: "/" },
         { text: "Links", icon: "mdi-link", route: "/links" },
-        { text: "Graph", icon: "mdi-graph", route: "/graph" }
+        { text: "Graph", icon: "mdi-graph", route: "/graph" },
       ],
     };
   },

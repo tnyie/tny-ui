@@ -40,86 +40,44 @@
         }"
       ></v-text-field>
 
-      <v-btn
-        style="display: block; margin: 1em auto;"
-        v-show="loggedIn"
-        @click="timedialog = true"
-      >
-        Set Unlock Time
-        <v-icon style="margin: 0.1em">mdi-lock</v-icon>
-      </v-btn>
-      <v-dialog
-        :fullscreen="this.$vuetify.breakpoint.mdAndDown"
-        v-model="timedialog"
-        max-width="1000px"
-        dark
-      >
-        <v-card style="padding: 4em;overflow-x: hidden;">
-          <v-card-title>
-            <h2
-              class="mt-16"
-              style="margin: auto; margin-bottom: 1em; word-break: initial; hyphens: none"
-            >
-              Set a time and date for your Link to unlock
-            </h2>
-          </v-card-title>
-          <v-card-text class="d-flex flex-column align-center">
-            <v-container
-              :class="
-                this.$vuetify.breakpoint.mdAndUp
-                  ? 'd-flex align-center justify-space-between'
-                  : 'd-flex flex-column align-center'
-              "
-            >
-              <v-date-picker
-                color="primary"
-                dark
-                v-model="unlock_time.date"
-                :style="
-                  this.$vuetify.breakpoint.mdAndDown ? 'margin-bottom: 1em' : ''
-                "
-              ></v-date-picker>
-              <v-time-picker
-                :landscape="this.$vuetify.breakpoint.mdAndUp"
-                dark
-                format="24hr"
-                v-model="unlock_time.time"
-                color="primary"
-              ></v-time-picker>
-            </v-container>
-            <v-container
-              style="margin: auto;"
-              class="d-flex flex-row align-items-center justify-center"
-            >
-              <v-btn @click="resetTime()">
-                Cancel
-              </v-btn>
-              <v-btn class="mx-4" color="primary" @click="timedialog = false">
-                Set date/time
-              </v-btn>
-            </v-container>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
-
-      <template>
+      <div class="d-flex justify-space-between">
         <v-text-field
-          label="Optional Password"
-          v-model="form.password"
-          tabindex="2"
-          :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="show2 ? 'text' : 'password'"
-          @click:append="show2 = !show2"
+          label="Unlock date"
+          :disabled="!loggedIn"
+          v-model="unlock_time.date"
+          type="date"
+          style="max-width: 40%;"
+          class="mx-4"
           dark
-          clearable
-          class="my-2"
-          counter
-          :style="{
-            width: $vuetify.breakpoint.mdAndDown ? '100%' : '60%',
-            margin: 'auto',
-          }"
         ></v-text-field>
-      </template>
+        <v-text-field
+          label="Unlock time"
+          v-model="unlock_time.time"
+          type="time"
+          :disabled="!loggedIn && unlock_time.date == ''"
+          style="max-width: 40%;"
+          class="mx-4"
+          dark
+        ></v-text-field>
+      </div>
+
+      <v-text-field
+        label="Optional Password"
+        v-model="form.password"
+        :disabled="!loggedIn"
+        tabindex="2"
+        :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+        :type="show2 ? 'text' : 'password'"
+        @click:append="show2 = !show2"
+        dark
+        clearable
+        class="my-2"
+        counter
+        :style="{
+          width: $vuetify.breakpoint.mdAndDown ? '100%' : '60%',
+          margin: 'auto',
+        }"
+      ></v-text-field>
       <v-btn
         @click="clickBtn"
         color="primary"
@@ -130,7 +88,7 @@
       </v-btn>
     </v-form>
     <h1 v-show="!loggedIn" dark class="mt-12">
-      Log in to get extra features, such as custom URLs
+      Log in to get extra features, such as protected links, and unlock times.
     </h1>
 
     <v-dialog v-model="dialog" width="500" dark>
@@ -156,13 +114,18 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar
+      v-model="snackbar"
+      timout="200"
+    >{{ snackbarStatus }}</v-snackbar>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
-import {links} from "../api/api"
+import { links } from "../api/api";
 
 const URLValidator = new RegExp(
   "^" +
@@ -246,19 +209,24 @@ export default Vue.extend({
       this.timedialog = false;
     },
     clickBtn() {
+      console.log(this.unlock_time.date);
+      console.log(this.unlock_time.time);
 
-      console.log(this.unlock_time.date)
-      console.log(this.unlock_time.time)
-
-      this.form.unlock_time = Date.parse(
-        this.unlock_time.date + " " + this.unlock_time.time
-      ) / 1000
+      this.form.unlock_time =
+        Date.parse(this.unlock_time.date + " " + this.unlock_time.time) / 1000;
       this.dialog = true;
-      console.log(this.form.unlock_time)
+      console.log(this.form.unlock_time);
     },
-    submitUrl() {
+    async submitUrl() {
       this.loadingResponse = true;
-      links.CreateLink(this.form)
+      const response = await links.CreateLink(this.form);
+      if (response[1] == false) {
+        this.snackbarStatus = "Created new link with slug \""+ (await response[0]).slug + "\""
+      } else {
+        this.snackbarStatus = "Failed to create link."
+      }
+      this.dialog = false;
+      this.snackbar = true;
     },
     genSlug() {
       const chars =
@@ -273,6 +241,8 @@ export default Vue.extend({
     return {
       dialog: false,
       show2: false,
+      snackbar: false,
+      snackbarStatus: "",
       form: {
         url: "",
         slug: "",

@@ -11,9 +11,9 @@ export interface Link {
     unlock_time: number | string
 }
 
-export const CreateLink = async (link: any): Promise<Link> => {
+export const CreateLink = async (link: any): Promise<[Promise<Link>, boolean]> => {
     const request = await APIReq("/links", "POST", link, true)
-    return await request.body
+    return await [request.body, request.err]
 }
 
 export const FetchOwnLinks = async (): Promise<Link[]> => {
@@ -45,7 +45,6 @@ export const UpdateLinkURL = async (linkID: string, url: string): Promise<boolea
     return request.err
 }
 
-export const DeleteLink = async (linkID: string): Promise<boolean> => {
-    const request = await APIReq("/links/"+linkID, "DELETE", {}, true)
-    return await request.err
+export const DeleteLink = (linkID: string): void => {
+    APIReq("/links/"+linkID, "DELETE", {}, true)
 }
