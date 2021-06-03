@@ -10,6 +10,7 @@
       :value="graph.data"
       :fill="graph.fill"
       line-width="1.5"
+      auto-draw-duration="500"
       padding="5"
       :type="$vuetify.breakpoint.smAndDown ? 'bar':'bar'"
       auto-draw
