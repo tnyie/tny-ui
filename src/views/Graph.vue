@@ -2,22 +2,51 @@
   <v-container
     dark
     class="white--text mb-12"
-    style="width: 100%; text-align: center"
+    style="width: 100vw; text-align: center"
   >
     <h1 class="mt-16 mb-16">Graphs</h1>
-    <template class="mt-16">
-      <chart style="max-height: 80%"></chart>
-    </template>
+    <v-sparkline
+      v-if="graph.loaded"
+      :value="graph.data"
+      :fill="graph.fill"
+      line-width="1.5"
+      padding="5"
+      :type="$vuetify.breakpoint.smAndDown ? 'bar':'bar'"
+      auto-draw
+    >
+      <template :v-show="$break" v-slot:label="item" style="color: white">
+        {{ item.value }}
+      </template>
+    </v-sparkline>
   </v-container>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import Chart from "@/components/Chart.vue";
 
-Vue.component("chart", Chart);
+import { links, visits } from "@/api/api";
+// Vue.component("chart", Chart);
 
 export default Vue.extend({
-  components: { Chart },
+  // components: { Chart },
   name: "Graph",
+  data() {
+    return {
+      graph: {
+        loaded: true,
+        fill: false,
+        data: [] as Array<number>,
+      },
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    async fetchData() {
+      
+      const visit = await visits.FetchLinkVisits(this.$route.params.id);
+      this.graph.data = visit.map((visit) => visit.count).reverse();
+    },
+  },
 });
 </script>

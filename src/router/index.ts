@@ -42,7 +42,7 @@ const routes: Array<RouteConfig> = [
       import("../views/Login.vue")
   },
   {
-    path: "/graph",
+    path: "/graph/:id",
     name: "Graph",
     component: Graph
   },

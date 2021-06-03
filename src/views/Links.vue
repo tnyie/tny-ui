@@ -24,7 +24,7 @@
               </v-btn>
             </template>
 
-            <v-card dark>
+            <v-card dark style="width: 100vw !important">
               <v-card-title class="error" style="text-align: center">
                 <span style="text-align: center" class="headline"
                   >Delete {{ selected[0].slug }} link</span
@@ -61,7 +61,7 @@
                 <v-icon> mdi-pencil </v-icon>
               </v-btn>
             </template>
-            <v-card dark>
+            <v-card dark style="max-width: 100vw !important">
               <v-card-title>
                 <span class="headline">Edit {{ selected[0].slug }} link</span>
               </v-card-title>
@@ -105,7 +105,15 @@
           :items="links"
           :search="search"
           :no-data-text="'You have no active links'"
+          
         >
+          <template v-slot:item.actions="{ item }">
+            <v-icon
+              @click="redirect(item)"
+            >
+            mdi-chart-bar
+            </v-icon>
+          </template>
         </v-data-table>
       </v-card>
       <template>
@@ -128,9 +136,16 @@
           </template>
         </v-snackbar>
       </template>
-    </template></v-container
-  >
+    </template>
+  </v-container>
 </template>
+
+<style scoped>
+.text-start {
+  padding: 1em;
+}
+</style>
+
 
 <script lang="ts">
 import Vue from "vue";
@@ -220,6 +235,7 @@ export default Vue.extend({
           { text: "Updated", filterable: true, value: "updated_at" },
           { text: "Unlock Time", filterable: true, value: "unlocktime" },
           { text: "Valid until", filterable: true, value: "lease" },
+          { text: "Graph", filterable: false, value: "actions", sortable: false }
         ],
       },
     };
@@ -238,9 +254,13 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    this.fetchlinks();
+    await this.fetchlinks();
+    console.log(this.links)
   },
   methods: {
+    redirect(item: links.Link) {
+      this.$router.push("/graph/"+item.id)
+    },
     async fetchlinks() {
       this.links = await links.FetchOwnLinks();
       for (const link of this.links) {
