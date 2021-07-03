@@ -114,6 +114,22 @@
             mdi-chart-bar
             </v-icon>
           </template>
+          <template #item.url="{ value }">
+            <a :href="value">
+              {{ value }}
+            </a>
+          </template>
+          <template v-slot:item.lease="{ item, value }">
+            <v-btn
+              color="error"
+              v-if="value < new Date().getTime() / 1000"
+              @click="reactivate(item)"
+            >
+              Reactivate
+            </v-btn>
+            <div v-else v-text="new Date(Number(value) * 1000).toLocaleDateString()">
+            </div>
+          </template>
         </v-data-table>
       </v-card>
       <template>
@@ -143,6 +159,14 @@
 <style scoped>
 .text-start {
   padding: 1em;
+}
+
+.text-start:hover {
+  background: #fff !important;
+}
+
+.v-data-table a {
+  text-decoration: none;
 }
 </style>
 
@@ -261,6 +285,10 @@ export default Vue.extend({
     redirect(item: links.Link) {
       this.$router.push("/graph/"+item.id)
     },
+    async reactivate(item: links.Link) {
+      await links.UpdateLinkLease(item)
+      this.fetchlinks();
+    },
     async fetchlinks() {
       this.links = await links.FetchOwnLinks();
       for (const link of this.links) {
@@ -279,7 +307,6 @@ export default Vue.extend({
             Number(link.updated_at) * 1000
           ).toLocaleDateString();
         }
-        link.lease = new Date(Number(link.lease) * 1000).toLocaleDateString();
         link.unlock_time =
           link.unlock_time == 0
             ? ""

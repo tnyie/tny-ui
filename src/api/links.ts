@@ -16,6 +16,12 @@ export const CreateLink = async (link: any): Promise<[Promise<Link>, boolean]> =
     return await [request.body, request.err]
 }
 
+export const UpdateLinkLease = async (link: any):  Promise<boolean> => {
+    const request = await APIReq("/links/"+link.id, "PUT", {}, true)
+
+    return !request.err
+}
+
 export const FetchLink = async (id: string): Promise<Link> => {
     const request = await APIReq("/links/"+id, "GET", {}, true)
     return request.body
