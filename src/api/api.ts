@@ -2,6 +2,7 @@ export * as links from "./links"
 export * as tokens from "./tokens"
 export * as visits from "./visits"
 export * as users from "./users"
+export * as gdpr from "./gdpr"
 
 export const API_DOMAIN = "https://tny.ie/api"
 

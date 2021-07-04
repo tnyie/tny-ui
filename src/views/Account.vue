@@ -11,14 +11,23 @@
         </tbody>
       </template>
     </v-simple-table>
-    <p class="mt-4"><a :href="'https://tny.ie/api/gdpr/'+uid">Download GDPR data</a></p>
+    
+    <v-btn
+      color="primary"
+      class="mt-8"
+      v-show="!this.displayGDPR"
+      @click="requestData"
+    >Request GDPR data</v-btn>
+    <v-card dark v-show="this.displayGDPR" class="mt-8 pa-2">
+      <pre v-text="this.gdprdata" style="textAlign: left"></pre>
+    </v-card>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
-import {users, tokens} from "@/api/api"
+import {users, tokens, gdpr} from "@/api/api"
 
 export default Vue.extend({
   name: "Account",
@@ -27,6 +36,8 @@ export default Vue.extend({
       // placeholder data
       uid: " ",
       userdata: [] as any[],
+      gdprdata: "",
+      displayGDPR: false,
     };
   },
   async mounted() {
@@ -40,6 +51,11 @@ export default Vue.extend({
     })
   },
   methods: {
+    async requestData() {
+      const data = await gdpr.RequestData()
+      this.gdprdata = JSON.stringify(await data, null, 2)
+      this.displayGDPR = true
+    },
     setData (key: string, value: any) {
       if (key == "created_at" || key == "updated_at" ) {
         value = value.toLocaleDateString()

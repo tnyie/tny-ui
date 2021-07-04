@@ -42,11 +42,6 @@ const routes: Array<RouteConfig> = [
       import("../views/Login.vue")
   },
   {
-    path: "/graph/:id",
-    name: "Graph",
-    component: Graph
-  },
-  {
     path: "/redirect/:slug",
     name: "Redirect", 
     component: () => import("../views/Redirect.vue")

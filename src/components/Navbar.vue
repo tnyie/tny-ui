@@ -146,7 +146,6 @@ export default Vue.extend({
       links: [
         { text: "Home", icon: "mdi-home", route: "/" },
         { text: "Links", icon: "mdi-link", route: "/links" },
-        { text: "Graph", icon: "mdi-graph", route: "/graph" },
       ],
     };
   },
