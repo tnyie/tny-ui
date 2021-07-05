@@ -45,6 +45,11 @@ const routes: Array<RouteConfig> = [
     path: "/redirect/:slug",
     name: "Redirect", 
     component: () => import("../views/Redirect.vue")
+  },
+  {
+    path: "/changepassword/:token",
+    name: "ChangePassword",
+    component: () => import("../views/ChangePassword.vue")
   }
 ];
 

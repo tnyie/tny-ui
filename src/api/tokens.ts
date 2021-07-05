@@ -23,5 +23,5 @@ export const Login = async (details: LoginDetails): Promise<string> => {
 
 export const CheckToken = async (): Promise<boolean> => {
     const request = await APIReq("/tokens", "GET", {}, true)
-    return request.err
+    return !request.err
 }

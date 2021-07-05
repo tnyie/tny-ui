@@ -4,7 +4,7 @@ export * as visits from "./visits"
 export * as users from "./users"
 export * as gdpr from "./gdpr"
 
-export const API_DOMAIN = "https://tny.ie/api"
+export const API_DOMAIN = "http://localhost:8888/api"
 
 interface APIResponse {
     status_code:    number,

@@ -105,13 +105,10 @@
           :items="links"
           :search="search"
           :no-data-text="'You have no active links'"
-          
         >
           <template v-slot:item.actions="{ item }">
-            <v-icon
-              @click="redirect(item)"
-            >
-            mdi-chart-bar
+            <v-icon @click="redirect(item)">
+              mdi-chart-bar
             </v-icon>
           </template>
           <template #item.url="{ value }">
@@ -127,8 +124,10 @@
             >
               Reactivate
             </v-btn>
-            <div v-else v-text="new Date(Number(value) * 1000).toLocaleDateString()">
-            </div>
+            <div
+              v-else
+              v-text="new Date(Number(value) * 1000).toLocaleDateString()"
+            ></div>
           </template>
         </v-data-table>
       </v-card>
@@ -169,7 +168,6 @@
   text-decoration: none;
 }
 </style>
-
 
 <script lang="ts">
 import Vue from "vue";
@@ -241,10 +239,10 @@ export default Vue.extend({
       edit: {
         index: 0,
         item: {},
-        dialog: false,
+        dialog: false
       },
       deleted: {
-        dialog: false,
+        dialog: false
       },
       selected: [{ id: "", slug: "", url: "" }],
       search: "",
@@ -259,9 +257,14 @@ export default Vue.extend({
           { text: "Updated", filterable: true, value: "updated_at" },
           { text: "Unlock Time", filterable: true, value: "unlocktime" },
           { text: "Valid until", filterable: true, value: "lease" },
-          { text: "Graph", filterable: false, value: "actions", sortable: false }
-        ],
-      },
+          {
+            text: "Graph",
+            filterable: false,
+            value: "actions",
+            sortable: false
+          }
+        ]
+      }
     };
   },
   computed: {
@@ -273,20 +276,20 @@ export default Vue.extend({
         },
         (v: string) => {
           return URLValidator.test(v) || "Invalid URL";
-        },
+        }
       ];
-    },
+    }
   },
   async mounted() {
     await this.fetchlinks();
-    console.log(this.links)
+    console.log(this.links);
   },
   methods: {
     redirect(item: links.Link) {
-      this.$router.push("/graph/"+item.id)
+      this.$router.push("/graph/" + item.id);
     },
     async reactivate(item: links.Link) {
-      await links.UpdateLinkLease(item)
+      await links.UpdateLinkLease(item);
       this.fetchlinks();
     },
     async fetchlinks() {
@@ -336,7 +339,7 @@ export default Vue.extend({
       links.DeleteLink(link.id);
       this.deleted.dialog = false;
       this.fetchlinks();
-    },
-  },
+    }
+  }
 });
 </script>

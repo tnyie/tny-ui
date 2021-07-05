@@ -6,7 +6,7 @@
       class="mt-12"
       :style="{
         width: $vuetify.breakpoint.smAndDown ? '100%' : '80%',
-        margin: 'auto',
+        margin: 'auto'
       }"
     >
       <v-text-field
@@ -20,7 +20,7 @@
         class="my-2"
         :style="{
           width: $vuetify.breakpoint.mdAndDown ? '100%' : '60%',
-          margin: 'auto',
+          margin: 'auto'
         }"
       ></v-text-field>
       <v-text-field
@@ -36,12 +36,57 @@
         class="my-2"
         :style="{
           width: $vuetify.breakpoint.mdAndDown ? '100%' : '60%',
-          margin: 'auto',
+          margin: 'auto'
         }"
       ></v-text-field>
-      <v-btn class="mt-4 mr-4" to="/signup" style="margin: auto">
-        Sign Up
-      </v-btn>
+
+      <v-dialog v-model="dialog" width="600px">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            class="mt-4 mr-4"
+            style="margin: auto"
+            v-bind="attrs"
+            v-on="on"
+          >
+            Forgot Password
+          </v-btn>
+        </template>
+
+        <v-card dark class="pa-4">
+          <v-card-title>Password Reset</v-card-title>
+
+          <v-card-text>
+            To reset password, we need to send a link to your email address to
+            verify that it's you.
+          </v-card-text>
+
+          <v-text-field
+            autofocus
+            label="Email"
+            v-model="passwordreset.email"
+            :rules="required.concat(emailRule)"
+            dark
+            clearable
+            class="my-2"
+            :style="{
+              width: $vuetify.breakpoint.smAndDown ? '100%' : '60%',
+              margin: 'auto'
+            }"
+          ></v-text-field>
+
+          <v-btn
+            color="primary"
+            class="my-4"
+            width="100%"
+            @click="requestPasswordReset"
+          >
+            Send password reset request
+          </v-btn>
+        </v-card>
+      </v-dialog>
+      <!-- <v-btn class="mt-4 mr-4" to="/resetpassword" style="margin: auto">
+        Forgot Password
+      </v-btn> -->
       <v-btn color="primary" class="mt-4" style="margin: auto" @click="submit"
         >Login</v-btn
       >
@@ -52,7 +97,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { tokens } from "@/api/api";
+import { tokens, users } from "@/api/api";
 
 const emailValidator = new RegExp(
   "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
@@ -61,6 +106,20 @@ const emailValidator = new RegExp(
 export default Vue.extend({
   name: "Home",
   props: ["loggedIn"],
+  data() {
+    return {
+      form: {
+        email: "",
+        password: ""
+      },
+      passwordreset: {
+        email: ""
+      },
+      error: null,
+      show2: false,
+      dialog: false
+    };
+  },
   computed: {
     required() {
       return [(v: string) => !!v || "field required"];
@@ -69,19 +128,9 @@ export default Vue.extend({
       return [
         (v: string) => {
           return emailValidator.test(v) || "Invalid Email";
-        },
+        }
       ];
-    },
-  },
-  data() {
-    return {
-      form: {
-        email: "",
-        password: "",
-      },
-      error: null,
-      show2: false,
-    };
+    }
   },
   methods: {
     async submit() {
@@ -91,6 +140,13 @@ export default Vue.extend({
       }
       window.location.href = "/";
     },
-  },
+    async requestPasswordReset() {
+      const sent = await users.PasswordResetRequest(this.passwordreset.email)
+
+      if (sent) {
+        window.location.href="/"
+      }
+    }
+  }
 });
 </script>

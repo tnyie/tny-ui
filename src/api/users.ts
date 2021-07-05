@@ -20,3 +20,15 @@ export const CreateUser = async (user: any): Promise<User> => {
     const request = await APIReq("/users", "POST", user, false)
     return await request.body
 }
+
+export const PasswordResetRequest = async (email: string): Promise<boolean> =>  {
+    const request = await APIReq("/users/password", "PUT", {email: email}, false)
+
+    return !request.err
+}
+
+export const PasswordReset = async (token: string, password: string): Promise<boolean> => {
+    const request = await APIReq("/users/password/" + token, "PUT", {password: password}, false)
+
+    return !request.err
+}
