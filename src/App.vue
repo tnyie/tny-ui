@@ -43,13 +43,17 @@ export default {
     }
   },
   methods: {
-    checkLogin () {
+    async checkLogin () {
       if (localStorage.getItem("token") == null) {
         this.loggedIn = false;
         return
       }
 
-      this.loggedIn = tokens.CheckToken()
+      this.loggedIn = await tokens.CheckToken()
+      if (!this.loggedIn) {
+        // remove outdated token
+        localStorage.removeItem("token")
+      }
     },
     signOut () {
       localStorage.clear();
