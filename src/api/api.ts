@@ -19,12 +19,13 @@ export interface GenericResponse {
 
 export const APIReq = async (path: string, method: string, body: any = undefined, authenticated = true) => {
     let request;
+    console.log(localStorage.getItem("token"))
     if (authenticated) {
         request = await fetch(API_DOMAIN + path, {
             method: method,
             mode: "cors",
             headers: {
-                "Authorization": (authenticated) ? `Bearer ${localStorage.getItem("token")}` : "",
+                "Authorization": (authenticated) ? String(localStorage.getItem("token")) : "",
                 "Content-Type": (body != {}) ? "application/json" : "text/plain",
             },
             body: (method === "GET") ? null:(!body) ? null:JSON.stringify(body)

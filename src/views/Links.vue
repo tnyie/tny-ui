@@ -111,7 +111,7 @@
               mdi-chart-bar
             </v-icon>
           </template>
-          <template #item.url="{ value }">
+          <template item.url="{ value }">
             <a :href="value">
               {{ value }}
             </a>
@@ -219,17 +219,6 @@ const URLValidator = new RegExp(
 
 const XSSValiator = new RegExp("^javascript:.*$");
 
-const getUID = () => {
-  const token = localStorage.getItem("token");
-  if (token != null) {
-    const claims = JSON.parse(atob(token.split(".")[1]));
-    if (claims != null) {
-      return claims.UserID;
-    }
-  }
-  return "";
-};
-
 export default Vue.extend({
   name: "Links",
   data() {
@@ -290,7 +279,7 @@ export default Vue.extend({
     },
     async reactivate(item: links.Link) {
       await links.UpdateLinkLease(item);
-      this.fetchlinks();
+      await this.fetchlinks();
     },
     async fetchlinks() {
       this.links = await links.FetchOwnLinks();

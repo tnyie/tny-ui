@@ -28,7 +28,7 @@ export const FetchLink = async (id: string): Promise<Link> => {
 }
 
 export const FetchOwnLinks = async (): Promise<Link[]> => {
-    const uid = tokens.GetUID()
+    const uid = await tokens.GetUID()
     const request = await APIReq("/links/user/"+uid, "GET", {}, true)
 
     if (await request.err) {

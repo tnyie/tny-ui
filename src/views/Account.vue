@@ -34,14 +34,14 @@ export default Vue.extend({
   data() {
     return {
       // placeholder data
-      uid: " ",
+      uid: "",
       userdata: [] as any[],
       gdprdata: "",
       displayGDPR: false,
     };
   },
   async mounted() {
-    this.uid = tokens.GetUID()
+    this.uid = await tokens.GetUID()
     const user =  await users.GetUser(this.uid)
     
     this.userdata = []

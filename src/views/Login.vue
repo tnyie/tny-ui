@@ -59,7 +59,6 @@
             To reset password, we need to send a link to your email address to
             verify that it's you.
           </v-card-text>
-
           <v-text-field
             autofocus
             label="Email"
@@ -79,14 +78,14 @@
             class="my-4"
             width="100%"
             @click="requestPasswordReset"
+            style="margin: auto; width: 50%; left: 0; display: block;"
           >
             Send password reset request
           </v-btn>
         </v-card>
       </v-dialog>
-      <!-- <v-btn class="mt-4 mr-4" to="/resetpassword" style="margin: auto">
-        Forgot Password
-      </v-btn> -->
+      <v-switch v-model="rememberme" class="mt-4" style="margin: auto; width: 50%" dark label="Remember me">
+      </v-switch>
       <v-btn color="primary" class="mt-4" style="margin: auto" @click="submit"
         >Login</v-btn
       >
@@ -108,9 +107,10 @@ export default Vue.extend({
   props: ["loggedIn"],
   data() {
     return {
+      rememberme: false,
       form: {
         email: "",
-        password: ""
+        password: "",
       },
       passwordreset: {
         email: ""
@@ -134,7 +134,14 @@ export default Vue.extend({
   },
   methods: {
     async submit() {
-      const token = await tokens.Login(this.form);
+      let token
+      if (this.rememberme) {
+        token = "Key "
+        token += await tokens.GetAPIKey(this.form)
+      } else {
+        token = "Bearer "
+        token += await tokens.Login(this.form);
+      }
       if (token != "") {
         localStorage.setItem("token", token);
       }

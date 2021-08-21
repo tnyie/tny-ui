@@ -1,16 +1,5 @@
 import { APIReq } from "./api"
 
-export const GetUID = (): string => {
-    const token = localStorage.getItem("token");
-    if (token != null) {
-        const claims = JSON.parse(atob(token.split(".")[1]));
-        if (claims != null) {
-          return claims.UserID;
-        }
-    }
-    return ""
-}
-
 interface LoginDetails {
     email:      string,
     password:   string
@@ -21,7 +10,16 @@ export const Login = async (details: LoginDetails): Promise<string> => {
     return request.body.token
 }
 
-export const CheckToken = async (): Promise<boolean> => {
+export const CheckToken = async (): Promise<string> => {
     const request = await APIReq("/tokens", "GET", {}, true)
-    return !request.err
+    return request.body.user_id
+}
+
+export const GetAPIKey = async (details: LoginDetails): Promise<string> => {
+    const request = await APIReq("/keys", "POST", details, false)
+    return request.body.key
+}
+
+export const GetUID = async (): Promise<string> => {
+    return await CheckToken()
 }
