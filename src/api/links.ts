@@ -39,7 +39,7 @@ export const FetchOwnLinks = async (): Promise<Link[]> => {
 
 export const FetchAuthenticatedLinks = async (slug: string, password: string): Promise<GenericResponse> => {
     const request = await APIReq(
-        "/links/authenticated/"+slug, "GET", {"password": password}, false
+        "/links/authenticated/"+slug, "PUT", {"password": password}, false
     )
 
     if (await request.err) {

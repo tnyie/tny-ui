@@ -44,8 +44,10 @@ export default Vue.extend({
   },
   methods: {
     async submit() {
-      const linkURL = await links.FetchAuthenticatedLinks(this.$route.path, this.form.password)
-      this.$router.push(linkURL.data)
+      const path = this.$route.path
+      const slug = path.split("/")[path.length - 1]
+      const linkURL = await links.FetchAuthenticatedLinks(slug, this.form.password)
+      window.location.href = linkURL.data
     }
   }
 });

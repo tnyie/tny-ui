@@ -244,7 +244,7 @@ export default Vue.extend({
           { text: "Visits", value: "visits" },
           { text: "Created", filterable: true, value: "created_at" },
           { text: "Updated", filterable: true, value: "updated_at" },
-          { text: "Unlock Time", filterable: true, value: "unlocktime" },
+          { text: "Unlock Time", filterable: true, value: "unlock_time" },
           { text: "Valid until", filterable: true, value: "lease" },
           {
             text: "Graph",

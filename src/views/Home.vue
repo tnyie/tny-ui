@@ -115,6 +115,45 @@
       </v-card>
     </v-dialog>
 
+    <div
+      style="margin-top: 4em;"
+    >
+    <h1>Or get the extension!</h1>
+
+    <div
+      style="
+        width: 20%;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+      "
+    >
+      <v-btn icon x-large
+      
+        href="https://addons.mozilla.org/en-GB/firefox/addon/tnyie-url-shortener"
+        target="_blank"
+      >
+        <v-icon
+          style="color: #009688;"
+        >
+          mdi-firefox
+        </v-icon>
+      </v-btn>
+      <v-btn primary icon x-large
+        href="https://chrome.google.com/webstore/detail/tnyie-url-shortener/pkfbefkomafnokkbpkcghoflaklajekp"
+        target="_blank"
+      >
+        <v-icon
+          style="color: #009688;"
+        >
+          mdi-google-chrome
+        </v-icon>
+      </v-btn>
+
+    </div>
+    </div>
+
     <v-snackbar
       v-model="snackbar"
       timout="200"
