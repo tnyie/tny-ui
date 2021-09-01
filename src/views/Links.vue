@@ -4,8 +4,8 @@
     class="white--text mb-12"
     style="width: 100%; text-align: center"
   >
-    <h1 class="mt-16 mb-16">Links</h1>
-    <template class="mt-16">
+    <h1 class="my-16">Links</h1>
+     <template class="mt-16">
       <v-card dark style="font-size: 2em" v-show="selected.length > 0">
         <v-card-title class="d-flex align-center justify-center">
           <v-btn class="ma-2" icon @click="fetchlinks">
@@ -106,17 +106,12 @@
           :search="search"
           :no-data-text="'You have no active links'"
         >
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="redirect(item)">
               mdi-chart-bar
             </v-icon>
           </template>
-          <template item.url="{ value }">
-            <a :href="value">
-              {{ value }}
-            </a>
-          </template>
-          <template v-slot:item.lease="{ item, value }">
+          <template v-slot:[`item.lease`]="{ item, value }">
             <v-btn
               color="error"
               v-if="value < new Date().getTime() / 1000"
@@ -300,7 +295,7 @@ export default Vue.extend({
           ).toLocaleDateString();
         }
         link.unlock_time =
-          link.unlock_time == 0
+          (link.unlock_time == 0)
             ? ""
             : new Date(Number(link.unlock_time) * 1000).toLocaleString();
       }

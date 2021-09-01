@@ -50,6 +50,11 @@ const routes: Array<RouteConfig> = [
     path: "/changepassword/:token",
     name: "ChangePassword",
     component: () => import("../views/ChangePassword.vue")
+  },
+  {
+    path: "/graph/:id",
+    name: "Graph",
+    component: () => import("../views/Graph.vue")
   }
 ];
 
