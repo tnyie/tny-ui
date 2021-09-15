@@ -55,6 +55,11 @@ const routes: Array<RouteConfig> = [
     path: "/graph/:id",
     name: "Graph",
     component: () => import("../views/Graph.vue")
+  },
+  {
+    path: "/stats",
+    name: "Stats",
+    component: () => import("../views/Stats.vue")
   }
 ];
 

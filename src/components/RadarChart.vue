@@ -1,8 +1,8 @@
 <script>
-import { Line } from "vue-chartjs";
+import { Radar } from "vue-chartjs";
 
 export default {
-  extends: Line,
+  extends: Radar,
   props: {
     label: {
       type: String,
@@ -35,7 +35,8 @@ export default {
   mounted() {
     this.$forceUpdate;
 
-  
+    const labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
     for (const visit of this.chartData) {
       visit.date = new Date(visit.date);
     }
@@ -62,16 +63,25 @@ export default {
         }
     }
 
-    for (let i=1; i<data.length; i++) {
-        data[i].count += data[i-1].count
+
+    for (let i=0; i<data.length; i++) {
+        data[i].date = data[i].date.getDay()
     }
 
-    const dates = data.map((item) => item.date.toLocaleDateString());
-    const totals = data.map((item) => item.count);
+    const totals = [0, 0, 0, 0, 0, 0, 0]
+
+    for (let i=0; i<7; i++) {
+      for (let j=0; j<data.length; j++) {
+        if (data[j].date == i) {
+          totals[i] += data[j].count
+        }
+      }
+    }
+    
 
     this.renderChart(
       {
-        labels: dates,
+        labels: labels,
         datasets: [
           {
             label: this.label,

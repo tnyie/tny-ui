@@ -18,6 +18,7 @@
 <script>
 import Navbar from "@/components/Navbar";
 import {tokens} from "@/api/api"
+import './global.css'
 
 export default {
   name: "App",

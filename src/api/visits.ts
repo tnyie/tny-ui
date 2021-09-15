@@ -7,7 +7,7 @@ export interface VisitPerDay {
 
 export const FetchLinkVisits = async (link_id: string): Promise<VisitPerDay[]> => {
   const date = new Date()
-  date.setDate(date.getDate()-30)
+  date.setDate(date.getDate()-200)
   const request = await APIReq("/visits/" + link_id + "/" + date.toISOString().split('T')[0], "GET", null, true)
   return await request.body
 }

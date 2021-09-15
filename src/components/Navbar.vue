@@ -121,6 +121,16 @@
             Links
           </v-list-item-title>
         </v-list-item>
+        <v-list-item v-show="loggedIn" link to="/stats">
+          <v-list-item-icon>
+            <v-icon>
+              mdi-chart-areaspline
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>
+            Stats
+          </v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
   </nav>
@@ -146,6 +156,7 @@ export default Vue.extend({
       links: [
         { text: "Home", icon: "mdi-home", route: "/" },
         { text: "Links", icon: "mdi-link", route: "/links" },
+        { text: "Stats", icon: "mdi-chart", route: "/stats" },
       ],
     };
   },
