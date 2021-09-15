@@ -9,7 +9,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import LineChart from "../components/LineChart.vue";
+import LineChart from "../components/MultiLine.vue";
 
 import * as api from "@/api/api";
 
