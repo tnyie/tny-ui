@@ -9,6 +9,7 @@
         margin: 'auto'
       }"
     >
+      <p style="color: #f33;" v-text="this.form.error"></p>
       <v-text-field
         autofocus
         label="Email"
@@ -111,6 +112,7 @@ export default Vue.extend({
       form: {
         email: "",
         password: "",
+        error: "",
       },
       passwordreset: {
         email: ""
@@ -140,12 +142,19 @@ export default Vue.extend({
         token += await tokens.GetAPIKey(this.form)
       } else {
         token = "Bearer "
-        token += await tokens.Login(this.form);
+        const output = await tokens.Login(this.form)
+        // if output is of type string
+        if (typeof output === "string") {
+          token += output
+        } else {
+          this.form.error = "Invalid email address or password"
+          return
+        }
       }
       if (token != "") {
         localStorage.setItem("token", token);
+        window.location.href = "/";
       }
-      window.location.href = "/";
     },
     async requestPasswordReset() {
       const sent = await users.PasswordResetRequest(this.passwordreset.email)

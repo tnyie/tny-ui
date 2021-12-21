@@ -82,8 +82,7 @@
         <v-card-text class="my-3">
           Notice: This project is a work-in-progress, and as such I offer no
           guaruntees of reliability until this project has been stable for a while.
-          Do <strong>NOT</strong> use a common password and use a placeholder email address like
-          <pre class="ma-4"><code class="primary--text">test@test.com</code></pre>
+          Do <strong>NOT</strong> use a common password.
         </v-card-text>
         
         <v-card-text>

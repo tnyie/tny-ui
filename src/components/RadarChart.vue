@@ -35,7 +35,7 @@ export default {
   mounted() {
     this.$forceUpdate;
 
-    const labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    const labels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
     for (const visit of this.chartData) {
       visit.date = new Date(visit.date);

@@ -47,9 +47,6 @@ export const FetchAuthenticatedLinks = async (slug: string, password: string): P
         "/links/authenticated/"+slug, "PUT", {"password": password}, false
     )
 
-    if (await request.err) {
-        return {data: ""}
-    }
     return await request.body
 }
 

@@ -5,7 +5,7 @@ interface LoginDetails {
     password:   string
 }
 
-export const Login = async (details: LoginDetails): Promise<string> => {
+export const Login = async (details: LoginDetails): Promise<string | boolean> => {
     const request = await APIReq("/tokens", "POST", details, false)
     return request.body.token
 }

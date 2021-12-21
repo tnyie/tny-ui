@@ -10,7 +10,6 @@
   ">
 
   <radar-chart v-if="!loading" :chartData="data" :options="radaroptions" label="Weekly Breakdown"></radar-chart>
-  <!-- <radar-chart v-if="!loading" :chartData="data" :options="radaroptions" label="Weekly Breakdown"></radar-chart> -->
   </div>
   </v-container>
 </template>
