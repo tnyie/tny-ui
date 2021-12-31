@@ -19,8 +19,7 @@ export interface GenericResponse {
 }
 
 export const APIReq = async (path: string, method: string, body: any = undefined, authenticated = true) => {
-    let request;
-    console.log(localStorage.getItem("token"))
+    let request
     try {
 
         if (authenticated) {

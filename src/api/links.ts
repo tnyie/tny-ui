@@ -54,7 +54,6 @@ export const UpdateLinkURL = async (linkID: string, url: string): Promise<boolea
     const request = await APIReq(
         "/links/"+linkID+"/url", "PUT", {"url": url}, true
     )
-    console.log(request)
     return request.err
 }
 

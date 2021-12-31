@@ -25,7 +25,6 @@ export default {
   components: { Navbar },
   created () {
     this.checkLogin()
-    console.log("Logged in: ", this.loggedIn)
   },
   data() {
     return {
