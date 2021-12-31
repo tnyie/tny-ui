@@ -177,11 +177,9 @@ export default Vue.extend({
       }
     },
 
-    submitForm() {
+    async submitForm() {
       this.dialog = !this.dialog;
-      console.log(`url: ${this.url}, slug: ${this.slug}, valid: ${this.valid}`);
-      const promise = postReq({ url: this.url, slug: this.slug });
-      console.log(promise);
+      await postReq({ url: this.url, slug: this.slug });
     }
   }
 });

@@ -23,9 +23,8 @@ export default {
         date.setDate(date.getDate() + days);
         return date;
       };
-      console.log(currentDate, endDate.date)
       while (currentDate <= endDate.date) {
-        dates.push({count: 0, date: currentDate});
+        dates.push({ count: 0, date: currentDate });
         currentDate = addDays.call(currentDate, 1);
       }
       return dates;
@@ -35,35 +34,35 @@ export default {
   mounted() {
     this.$forceUpdate;
 
-  
     for (const visit of this.chartData) {
       visit.date = new Date(visit.date);
     }
 
     this.chartData.sort((a, b) => a.date - b.date);
-    
-    const data = this.getDates(this.chartData[0].date, this.chartData[this.chartData.length - 1])
+
+    const data = this.getDates(
+      this.chartData[0].date,
+      this.chartData[this.chartData.length - 1]
+    );
 
     for (const date of data) {
-        date.date.setHours(0, 0, 0, 0)
+      date.date.setHours(0, 0, 0, 0);
     }
 
     for (const date of this.chartData) {
-        date.date.setHours(0, 0, 0, 0)
+      date.date.setHours(0, 0, 0, 0);
     }
 
     for (const visit of this.chartData) {
-        for (let k=this.chartData.indexOf(visit); k<data.length; k++) {
-            if (data[k].date.getTime() == visit.date.getTime()) {
-                data[k].count = visit.count
-            } else {
-                console.log("miss")
-            }
+      for (let k = this.chartData.indexOf(visit); k < data.length; k++) {
+        if (data[k].date.getTime() == visit.date.getTime()) {
+          data[k].count = visit.count;
         }
+      }
     }
 
-    for (let i=1; i<data.length; i++) {
-        data[i].count += data[i-1].count
+    for (let i = 1; i < data.length; i++) {
+      data[i].count += data[i - 1].count;
     }
 
     const dates = data.map((item) => item.date.toLocaleDateString());
@@ -78,7 +77,7 @@ export default {
             data: totals,
             // color: 'rgba(255, 255, 255, 255)',
             backgroundColor: "#00968888",
-            borderColor: "#009688"
+            borderColor: "#009688",
           },
         ],
       },
