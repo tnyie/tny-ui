@@ -260,7 +260,8 @@ export default Vue.extend({
       this.loadingResponse = true;
       const response = await links.CreateLink(this.form);
       if (response[1] == false) {
-        this.snackbarStatus = "Created new link with slug \""+ (await response[0]).slug + "\""
+        this.snackbarStatus = "Created new link with slug \""+ (await response[0]).slug + "\". Copied to clipboard."
+        navigator.clipboard.writeText((await response[0]).slug);
       } else {
         this.snackbarStatus = "Failed to create link."
       }
