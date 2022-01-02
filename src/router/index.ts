@@ -60,6 +60,16 @@ const routes: Array<RouteConfig> = [
     path: "/stats",
     name: "Stats",
     component: () => import("../views/Stats.vue")
+  },
+  {
+    path: "/privacy",
+    name: "Privacy",
+    component: () => import("../views/Privacy.vue")
+  },
+  {
+    path: "/tos",
+    name: "Tos",
+    component: () => import("../views/Tos.vue")
   }
 ];
 
